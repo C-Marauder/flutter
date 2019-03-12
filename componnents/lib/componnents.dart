@@ -7,3 +7,4 @@ library componnents;
 //}
 export "src/ScaffoldPage.dart";
 export "src/PageManager.dart";
+export 'src/AppScaffold.dart';

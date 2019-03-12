@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
-
+import 'mine/AboutUsPage.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: DefaultTabController(length: tabs.length, child: MainPage()),
+      routes: {'about_us': (BuildContext context) => AboutUsPage()},
     );
   }
 }
@@ -38,6 +39,10 @@ class _MainPageState extends State<MainPage> {
   PageController _pageController;
   int _currentPage = 0;
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
+  void openMenuPage(BuildContext context, String name) {
+    Navigator.pushNamed(context, name);
+  }
 
   @override
   void initState() {
@@ -58,14 +63,16 @@ class _MainPageState extends State<MainPage> {
               });
             }),
         flexibleSpace: Text("main"),
-        bottom: TabBar(tabs: tabs.map((TabData tabData){
-          return Tab(text: tabData.title,icon: Icon(tabData.icon));
+        bottom: TabBar(
+            tabs: tabs.map((TabData tabData) {
+          return Tab(text: tabData.title, icon: Icon(tabData.icon));
         }).toList()),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("首页")),
-          BottomNavigationBarItem(icon: Icon(Icons.monetization_on), title: Text("贷款")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.monetization_on), title: Text("贷款")),
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("我的")),
         ],
         currentIndex: _currentIndex,
@@ -75,7 +82,30 @@ class _MainPageState extends State<MainPage> {
           });
         },
       ),
-      drawer: Drawer(child: DrawerHeader(child: Icon(Icons.person_pin))),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+                child: Image.network(
+                    "https://simg314.magcasa.com/content_images/2016/01/20/222589/1453224609_6632.jpg")),
+            ListTile(
+              leading: Icon(Icons.feedback, color: Colors.blue),
+              title: Text("问题反馈"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.domain, color: Colors.blue),
+              title: Text("关于我们"),
+              trailing: Icon(Icons.arrow_forward),
+              onTap: () {
+                openMenuPage(context, "about_us");
+              },
+            ),
+          ],
+        ),
+      ),
+      //Drawer(child: DrawerHeader(child:Image.network("https://simg314.magcasa.com/content_images/2016/01/20/222589/1453224609_6632.jpg"))),
       body: PageView(
         controller: _pageController,
         children: <Widget>[HomePage(), HomePage(), HomePage()],
@@ -88,16 +118,16 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
 class TabData {
-  const TabData({this.title,this.icon});
+  const TabData({this.title, this.icon});
 
   final String title;
   final IconData icon;
 }
+
 const List<TabData> tabs = const <TabData>[
   const TabData(title: '社保', icon: Icons.security),
   const TabData(title: '信用卡', icon: Icons.credit_card),
   const TabData(title: '公积金', icon: Icons.account_balance)
-
 ];
-
